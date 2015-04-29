@@ -28,6 +28,14 @@ $colorStops: hsl(0deg, 50%, 50%) 0%;
   &.hue-slider {
     @include linear-gradient(to right, $colorStops);
   }
+
+  &.chroma-slider {
+    @include linear-gradient(to right, grayscale($colorPrimary), $colorPrimary);
+  }
+
+  &.lightness-slider {
+    @include linear-gradient(to right, black, white);
+  }
 }
 
 .bar {
@@ -48,4 +56,17 @@ $colorStops: hsl(0deg, 50%, 50%) 0%;
   background-color: white;
   border: 1px solid $colorGray1;
   border-radius: unit(0.125);
+}
+
+input[type="text"].slider-input {
+  width: unit(3);
+  float: left;
+
+  + input[type="text"].slider-input {
+    float: right;
+  }
+}
+
+.swatch {
+  @include size(unit(1));
 }
