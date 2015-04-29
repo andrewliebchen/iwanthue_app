@@ -1,0 +1,51 @@
+$assetPath: "../../node_modules/Ovid/dist" !default;
+
+@import "../../node_modules/bourbon/app/assets/stylesheets/bourbon";
+@import "../../node_modules/mathsass/dist/math";
+
+@import "../../node_modules/Ovid/dist/stylesheets/library";
+@import "../../node_modules/Ovid/dist/stylesheets/ovid";
+
+$sliderHeight: unit(1);
+
+$colorStops: hsl(0deg, 50%, 50%) 0%;
+@for $i from 1 through 360 {
+  $color: hsl($i, 100%, 50%);
+  $colorStop: $color percentage($i / 360);
+  $colorStops: append($colorStops, $colorStop, comma);
+}
+
+.wrapper {
+  width: unit(10);
+  margin: $padding auto;
+}
+
+.slider {
+  height: $sliderHeight;
+  border-radius: $radius;
+  margin-bottom: $paddingSmall;
+
+  &.hue-slider {
+    @include linear-gradient(to right, $colorStops);
+  }
+}
+
+.bar {
+  height: $sliderHeight;
+
+  &.bar-0,
+  &.bar-2 {
+    background-color: rgba(white, 0.9);
+  }
+}
+
+.handle {
+  $width: unit(0.25);
+  $offset: -(unit(0.125));
+  width: $width;
+  top: $offset;
+  bottom: $offset;
+  background-color: white;
+  border: 1px solid $colorGray1;
+  border-radius: unit(0.125);
+}
