@@ -27,6 +27,7 @@
     "install": "^0.1.8",
     "iwanthue-api": "git+ssh://git@github.com:andrewliebchen/iwanthue-api.git",
     "jshint-loader": "~0.8.0",
+    "json-format": "0.0.1",
     "jsx-loader": "~0.12.2",
     "jsxhint-loader": "~0.2.0",
     "karma": "~0.12.21",

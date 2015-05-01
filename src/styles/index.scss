@@ -20,6 +20,14 @@ $colorStops: hsl(0deg, 50%, 50%) 0%;
   margin: $padding auto;
 }
 
+.ui-button {
+  width: 100%;
+}
+
+.ui-form {
+  margin: 0;
+}
+
 .slider {
   height: $sliderHeight;
   border-radius: $radius;
@@ -67,6 +75,13 @@ input[type="text"].slider-input {
   }
 }
 
+.swatches {
+  @include clearfix;
+  margin: $padding 0;
+}
+
 .swatch {
   @include size(unit(1));
+  float: left;
+  // margin: $paddingMicro;
 }
