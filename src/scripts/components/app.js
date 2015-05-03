@@ -77,12 +77,18 @@ var Results = React.createClass({
             <div className="swatches">
               {this.props.palette.map(function(color, i) {
                 var backgroundColor = `rgb(${color.rgb[0]}, ${color.rgb[1]}, ${color.rgb[2]})`;
-                return <div key={i} className="swatch" style={{backgroundColor: backgroundColor}}/>;
+                return (
+                  <div key={i} className="swatch__container ui-form">
+                    <div className="swatch" style={{backgroundColor: backgroundColor}}/>
+                    <input type="text" defaultValue={chroma(backgroundColor).hex()}/>
+                  </div>
+                );
               })}
             </div>
-            <pre className="ui-card__content">
+            <a>Download</a>
+            {/*<pre className="ui-card__content">
               {jsonFormat(this.props.palette)}
-            </pre>
+            </pre>*/}
           </div>
         : null}
       </span>
@@ -134,6 +140,15 @@ var App = React.createClass({
 
   onLightnessUpdate: function(value) {
     this.setState({lValue: value});
+  },
+
+  handleSteps: function(event) {
+    var value = event.target.value;
+    this.setState({steps: value});
+  },
+
+  toggleVector: function() {
+    this.setState({vector: !this.state.vector});
   },
 
   handleGenerate: function() {
@@ -198,6 +213,18 @@ var App = React.createClass({
                 value={this.state.lValue}
                 onUpdate={this.onLightnessUpdate}
                 className="slider lightness-slider"/>
+              <div className="ui-card__content">
+                <fieldset className="ui-form">
+                  <label>Color steps</label>
+                  <input type="number" value={this.state.steps} onChange={this.handleSteps}/>
+                </fieldset>
+                <fieldset className="ui-form">
+                  <label>Color vector</label>
+                  <button className="ui-button small" onClick={this.toggleVector}>
+                    {this.state.vector ? "Using force vector" : "Using k-means"}
+                  </button>
+                </fieldset>
+              </div>
             </div>
           </div>
           <div className="ui-col-4of12">
