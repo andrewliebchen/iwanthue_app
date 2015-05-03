@@ -19,6 +19,9 @@ var ColorInput = React.createClass({
   render: function(){
     return (
       <div className="ui-card">
+        <header className="ui-card__header">
+          <h3>Color input</h3>
+        </header>
         <div className="ui-card__content ui-form">
           <input
             type="text"
@@ -45,6 +48,7 @@ var ColorSlider = React.createClass({
   render: function() {
     return (
       <fieldset className="ui-card__content ui-form">
+        <label>{this.props.label}</label>
         <ReactSlider
           min={this.props.min}
           max={this.props.max}
@@ -73,17 +77,17 @@ var Results = React.createClass({
     return (
       <span>
         {this.props.palette ?
-          <span>
+          <div className="ui-card__content results">
             <div className="swatches">
               {this.props.palette.map(function(color, i) {
                 var backgroundColor = `rgb(${color.rgb[0]}, ${color.rgb[1]}, ${color.rgb[2]})`;
                 return <div key={i} className="swatch" style={{backgroundColor: backgroundColor}}/>;
               })}
             </div>
-            <pre>
+            <pre className="ui-card__content">
               {jsonFormat(this.props.palette)}
             </pre>
-          </span>
+          </div>
         : null}
       </span>
     );
@@ -152,33 +156,53 @@ var App = React.createClass({
   render: function() {
     return (
       <div className="wrapper">
-        <ColorInput base={this.state.base} handleBase={this.handleBase}/>
-        <div className="ui-card">
-          <ColorSlider
-            min={0}
-            max={360}
-            value={this.state.hValue}
-            onUpdate={this.onHueUpdate}
-            className="slider hue-slider"/>
-          <ColorSlider
-            min={0}
-            max={3}
-            step={0.01}
-            value={this.state.cValue}
-            onUpdate={this.onChromaUpdate}
-            className="slider chroma-slider"/>
-          <ColorSlider
-            min={0}
-            max={1.5}
-            step={0.015}
-            value={this.state.lValue}
-            onUpdate={this.onLightnessUpdate}
-            className="slider lightness-slider"/>
-          <footer className="ui-card__content">
-            <button className="ui-button primary" onClick={this.handleGenerate}>Generate</button>
-          </footer>
+        <div className="ui-row">
+          <div className="ui-col-4of12">
+            <ColorInput base={this.state.base} handleBase={this.handleBase}/>
+          </div>
+          <div className="ui-col-4of12">
+            <div className="ui-card">
+              <header className="ui-card__header">
+                <h3>Color generator</h3>
+              </header>
+              <ColorSlider
+                label="Hue"
+                min={0}
+                max={360}
+                value={this.state.hValue}
+                onUpdate={this.onHueUpdate}
+                className="slider hue-slider"/>
+              <ColorSlider
+                label="Chroma"
+                min={0}
+                max={3}
+                step={0.01}
+                value={this.state.cValue}
+                onUpdate={this.onChromaUpdate}
+                className="slider chroma-slider"/>
+              <ColorSlider
+                label="Lightness"
+                min={0}
+                max={1.5}
+                step={0.015}
+                value={this.state.lValue}
+                onUpdate={this.onLightnessUpdate}
+                className="slider lightness-slider"/>
+
+            </div>
+          </div>
+          <div className="ui-col-4of12">
+            <div className="ui-card">
+              <header className="ui-card__header">
+                <h3>Results</h3>
+              </header>
+              <div className="ui-card__content">
+                <button className="ui-button primary" onClick={this.handleGenerate}>Generate</button>
+              </div>
+              <Results palette={this.state.palette}/>
+            </div>
+          </div>
         </div>
-        <Results palette={this.state.palette}/>
       </div>
     );
   }

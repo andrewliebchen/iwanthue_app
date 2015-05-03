@@ -16,8 +16,15 @@ $colorStops: hsl(0deg, 50%, 50%) 0%;
 }
 
 .wrapper {
-  width: unit(10);
+  max-width: unit(50);
   margin: $padding auto;
+}
+
+pre {
+  overflow: scroll;
+  max-height: unit(15);
+  border-radius: $radius;
+  margin: 0;
 }
 
 .ui-button {
@@ -75,9 +82,13 @@ input[type="text"].slider-input {
   }
 }
 
+.results {
+  border-top: 1px solid $colorBorder3;
+}
+
 .swatches {
   @include clearfix;
-  margin: $padding 0;
+  margin-bottom: $paddingSmall;
 }
 
 .swatch {
