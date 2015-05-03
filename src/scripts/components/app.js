@@ -18,17 +18,13 @@ var ColorInput = React.createClass({
 
   render: function(){
     return (
-      <div className="ui-card">
-        <header className="ui-card__header">
-          <h3>Color input</h3>
-        </header>
-        <div className="ui-card__content ui-form">
-          <input
-            type="text"
-            value={this.props.base}
-            onChange={this.handleInput}
-            placeholder="Base color"/>
-        </div>
+      <div className="ui-card__content ui-form">
+        <label>Base color value</label>
+        <input
+          type="text"
+          value={this.props.base}
+          onChange={this.handleInput}
+          placeholder="Base color"/>
       </div>
     );
   }
@@ -123,6 +119,11 @@ var App = React.createClass({
     this.setState({hValue: hValue});
   },
 
+  handleRange: function(event) {
+    var value = parseInt(event.target.value);
+    this.setState({range: value});
+  },
+
   onHueUpdate: function(value) {
     this.setState({hValue: value});
   },
@@ -158,7 +159,16 @@ var App = React.createClass({
       <div className="wrapper">
         <div className="ui-row">
           <div className="ui-col-4of12">
-            <ColorInput base={this.state.base} handleBase={this.handleBase}/>
+            <div className="ui-card">
+              <header className="ui-card__header">
+                <h3>Color input</h3>
+              </header>
+              <div className="ui-card__content ui-form">
+                <label>Hue range degrees</label>
+                <input type="number" value={this.state.range} onChange={this.handleRange}/>
+              </div>
+              <ColorInput base={this.state.base} handleBase={this.handleBase}/>
+            </div>
           </div>
           <div className="ui-col-4of12">
             <div className="ui-card">
@@ -188,7 +198,6 @@ var App = React.createClass({
                 value={this.state.lValue}
                 onUpdate={this.onLightnessUpdate}
                 className="slider lightness-slider"/>
-
             </div>
           </div>
           <div className="ui-col-4of12">
