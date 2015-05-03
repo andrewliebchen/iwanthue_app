@@ -11,6 +11,26 @@ var ReactSlider = require('react-slider');
 require('../../styles/normalize.css');
 require('../../styles/index.scss');
 
+var ColorInput = React.createClass({
+  handleInput: function(event){
+    this.props.handleBase(event.target.value);
+  },
+
+  render: function(){
+    return (
+      <div className="ui-card">
+        <div className="ui-card__content ui-form">
+          <input
+            type="text"
+            value={this.props.base}
+            onChange={this.handleInput}
+            placeholder="Base color"/>
+        </div>
+      </div>
+    );
+  }
+});
+
 var ColorSlider = React.createClass({
   handleSlider: function(value){
     this.props.onUpdate(value);
@@ -84,19 +104,12 @@ var App = React.createClass({
     };
   },
 
-  handleBase: function(event) {
-    var colorHSL = chroma(event.target.value).hsl();
+  handleBase: function(value) {
+    var colorHSL = chroma(value).hsl();
     var colorHue = colorHSL[0];
 
     var hValueStart = colorHue - this.state.range / 2;
     var hValueEnd = hValueStart + this.state.range;
-    if(hValueStart < 0) {
-      hValueEnd = 360 + hValueStart;
-      hValueStart = hValueEnd - 90;
-    } else if(hValueEnd > 360) {
-      hValueStart = hValueEnd - 360;
-      hValueEnd = hValueStart + this.state.range;
-    }
 
     var hValue = [
       hValueStart,
@@ -139,15 +152,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div className="wrapper">
-        <div className="ui-card">
-          <div className="ui-card__content ui-form">
-            <input
-              type="text"
-              value={this.state.base}
-              onChange={this.handleBase}
-              placeholder="Base color"/>
-          </div>
-        </div>
+        <ColorInput base={this.state.base} handleBase={this.handleBase}/>
         <div className="ui-card">
           <ColorSlider
             min={0}
