@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react/addons');
+var cx = React.addons.classSet;
 var chroma = require('chroma-js');
 var jsonFormat = require('json-format');
 
@@ -10,6 +11,29 @@ var ReactSlider = require('react-slider');
 // CSS
 require('../../styles/normalize.css');
 require('../../styles/index.scss');
+
+var Toggle = React.createClass({
+  render: function() {
+    var toggleClassName = cx({
+      "ui-toggle": true,
+      "is-true": this.props.isTrue
+    });
+
+    return (
+      <fieldset className="ui-form">
+        <label>{this.props.label}</label>
+        <div onClick={this.props.onToggle}>
+          <div className={toggleClassName}>
+            <div className="ui-toggle__handle"/>
+          </div>
+          <span className="ui-toggle__label">
+            {this.props.toggleLabel[this.props.isTrue ? 'true' : 'false']}
+          </span>
+        </div>
+      </fieldset>
+    );
+  }
+});
 
 var ColorInput = React.createClass({
   handleInput: function(event){
@@ -24,7 +48,7 @@ var ColorInput = React.createClass({
           type="text"
           value={this.props.base}
           onChange={this.handleInput}
-          placeholder="Base color"/>
+          placeholder="Hex, rgb(), hsl(), etc."/>
       </div>
     );
   }
@@ -55,12 +79,12 @@ var ColorSlider = React.createClass({
           withBars />
         <input
           className="slider-input"
-          type="text"
+          type="number"
           value={this.props.value[0]}
           onChange={this.handleInput.bind(this, 0)}/>
         <input
           className="slider-input"
-          type="text"
+          type="number"
           value={this.props.value[1]}
           onChange={this.handleInput.bind(this, 1)}/>
       </fieldset>
@@ -69,23 +93,44 @@ var ColorSlider = React.createClass({
 });
 
 var Results = React.createClass({
+  getInitialState: function() {
+    return {
+      diff: false
+    };
+  },
+
+  toggleDiff: function() {
+    this.setState({diff: !this.state.diff});
+  },
+
+  handleDownload: function() {
+    var output = jsonFormat(this.props.palette);
+    window.open('data:application/json;' + (window.btoa ? 'base64,' + btoa(output) : output));
+  },
+
   render: function() {
+    var palette = this.state.diff ? iWantHue().diffSort(this.props.palette) : this.props.palette;
+
     return (
       <span>
         {this.props.palette ?
           <div className="ui-card__content results">
+            <Toggle
+              isTrue={this.state.diff}
+              toggleLabel={{'true': "Sort colors by differentiation", 'false': "Don't differentiate colors"}}
+              onToggle={this.toggleDiff}/>
             <div className="swatches">
-              {this.props.palette.map(function(color, i) {
-                var backgroundColor = `rgb(${color.rgb[0]}, ${color.rgb[1]}, ${color.rgb[2]})`;
+              {palette.map(function(color, i) {
+                // var backgroundColor = `rgb(${color.rgb[0]}, ${color.rgb[1]}, ${color.rgb[2]})`;
                 return (
                   <div key={i} className="swatch__container ui-form">
-                    <div className="swatch" style={{backgroundColor: backgroundColor}}/>
-                    <input type="text" defaultValue={chroma(backgroundColor).hex()}/>
+                    <div className="swatch" style={{backgroundColor: color.hex()}}/>
+                    <input type="text" defaultValue={color.hex()}/>
                   </div>
                 );
               })}
             </div>
-            <a>Download</a>
+            <button className="ui-button small" onClick={this.handleDownload}>Download</button>
             {/*<pre className="ui-card__content">
               {jsonFormat(this.props.palette)}
             </pre>*/}
@@ -147,6 +192,11 @@ var App = React.createClass({
     this.setState({steps: value});
   },
 
+  handleSwatches: function(event) {
+    var value = event.target.value;
+    this.setState({swatches: value});
+  },
+
   toggleVector: function() {
     this.setState({vector: !this.state.vector});
   },
@@ -176,7 +226,7 @@ var App = React.createClass({
           <div className="ui-col-4of12">
             <div className="ui-card">
               <header className="ui-card__header">
-                <h3>Color input</h3>
+                <h3>1. Color input</h3>
               </header>
               <div className="ui-card__content ui-form">
                 <label>Hue range degrees</label>
@@ -188,7 +238,7 @@ var App = React.createClass({
           <div className="ui-col-4of12">
             <div className="ui-card">
               <header className="ui-card__header">
-                <h3>Color generator</h3>
+                <h3>2. Color generator</h3>
               </header>
               <ColorSlider
                 label="Hue"
@@ -217,20 +267,25 @@ var App = React.createClass({
                 <fieldset className="ui-form">
                   <label>Color steps</label>
                   <input type="number" value={this.state.steps} onChange={this.handleSteps}/>
+                  <p className="hint"/>
                 </fieldset>
                 <fieldset className="ui-form">
-                  <label>Color vector</label>
-                  <button className="ui-button small" onClick={this.toggleVector}>
-                    {this.state.vector ? "Using force vector" : "Using k-means"}
-                  </button>
+                  <label># of swatches</label>
+                  <input type="number" value={this.state.swatches} onChange={this.handleSwatches}/>
+                  <p className="hint"/>
                 </fieldset>
+                <Toggle
+                  label="Color vector"
+                  isTrue={this.state.vector}
+                  toggleLabel={{'true': "Using force vector", 'false': "Using k-means"}}
+                  onToggle={this.toggleVector}/>
               </div>
             </div>
           </div>
           <div className="ui-col-4of12">
             <div className="ui-card">
               <header className="ui-card__header">
-                <h3>Results</h3>
+                <h3>3. Results</h3>
               </header>
               <div className="ui-card__content">
                 <button className="ui-button primary" onClick={this.handleGenerate}>Generate</button>

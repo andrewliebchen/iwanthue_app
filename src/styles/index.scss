@@ -73,11 +73,11 @@ pre {
   border-radius: unit(0.125);
 }
 
-input[type="text"].slider-input {
+input[type="number"].slider-input {
   width: unit(3);
   float: left;
 
-  + input[type="text"].slider-input {
+  + input[type="number"].slider-input {
     float: right;
   }
 }
@@ -88,7 +88,7 @@ input[type="text"].slider-input {
 
 .swatches {
   @include clearfix;
-  margin-bottom: $paddingSmall;
+  margin: $paddingSmall 0;
 }
 
 .swatch__container {
