@@ -9,7 +9,6 @@
   "dist": "dist",
   "mainInput": "IwanthueAppApp",
   "mainOutput": "main",
-  "main": "dist/index.html",
   "dependencies": {
     "react": "~0.12.2"
   },
